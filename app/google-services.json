@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "647752878005",
+    "project_id": "neogestion-e0d06",
+    "storage_bucket": "neogestion-e0d06.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647752878005:android:00bbac44e27bfb3260bbfc",
+        "android_client_info": {
+          "package_name": "com.example.NeoGestion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "647752878005-79qf2n9q4132bqjf0hk0b2gofo3jgco3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.NeoGestion",
+            "certificate_hash": "8ab2d8a01a2a88f95a1fad89eed9deca958c1e7a"
+          }
+        },
+        {
+          "client_id": "647752878005-oh1i6erpab0hfatui3chb8gcbtt9ht18.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1178iHbAagls-7KdBZKsc7yGCG9GksRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "647752878005-oh1i6erpab0hfatui3chb8gcbtt9ht18.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

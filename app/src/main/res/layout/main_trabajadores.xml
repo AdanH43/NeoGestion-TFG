@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_trabajadores"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+   ¡
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/filtrar_usu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:hintTextColor="@color/blue_600"
+        app:boxStrokeColor="@color/blue_400"
+        android:hint="@string/buscar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tb_layout"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:layout_height="wrap_content"
+        app:tabMode="fixed"
+        app:tabIconTint="@color/blue_400"
+        app:layout_constraintBottom_toTopOf="@id/fragment_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/filtrar_usu"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        android:layout_below="@id/tb_layout"
+        android:backgroundTint="@color/blue_200"
+        app:layout_constraintTop_toBottomOf="@id/tb_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tb_layout"
+        android:layout_margin="20dp" />
+
+
+    <ImageView
+        android:id="@+id/bt_select"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="15dp"
+        android:src="@drawable/puntos"
+        app:layout_constraintTop_toTopOf="@id/tb_layout"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:backgroundTint="@color/blue_300"
+        app:layout_constraintEnd_toEndOf="@+id/viewPager"
+        android:layout_margin="30dp"
+        android:src="@drawable/baseline_add_24"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

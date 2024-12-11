@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:background="@color/blue_600"
+        android:icon="@drawable/home"
+        android:title="Home" />
+    <item
+        android:id="@+id/nav_usuarios"
+        android:title="Usuarios"
+        android:icon="@drawable/baseline_recent_actors_24"
+        android:background="@color/blue_600"
+        />
+
+    <item
+        android:id="@+id/nav_productos"
+        android:icon="@drawable/baseline_inventory_24"
+        android:background="@color/blue_600"
+        android:title="Productos" />
+
+
+</menu>
