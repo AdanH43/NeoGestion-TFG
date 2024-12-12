@@ -3,5 +3,13 @@
     <string-array name="tipo_usuario_array">
         <item>Usuario regular</item>
         <item>Trabajador</item>
+        <item>Administrador</item>
+        <item>Proveedor</item>
+    </string-array>
+    <string-array name="tipo_categoria">
+        <item>Alimentacion</item>
+        <item>Maquillaje</item>
+        <item>Ropa</item>
+        <item>Electronica</item>
     </string-array>
 </resources>

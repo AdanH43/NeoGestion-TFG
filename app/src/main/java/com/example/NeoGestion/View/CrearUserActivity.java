@@ -96,8 +96,16 @@ public class CrearUserActivity extends AppCompatActivity {
             text.setText(usuarioeditar.getFechaNacimiento());
             spinnertipo.setText(usuarioeditar.getTipousuario(), false);
             stw_baja.setVisibility(View.VISIBLE);
+            edtcrearcorreo.setFocusable(false);
+            edtcrearcorreo.setClickable(false);
+            if (!usuarioeditar.getFechaBaja().isEmpty()) {
+                stw_baja.setChecked(true);
+            }
+
         } else {
-            edtcrearcorreo.getEditText().setHint(getString(R.string.correo) + "*");
+            edtcrearcorreo.setFocusable(true);
+            edtcrearcorreo.setClickable(true);
+            edtcrearcorreo.getEditText().setHint(getString(R.string.email) + "*");
             edtcrearusu.getEditText().setHint(getString(R.string.user) + "*");
             lb_fecha.setText(getString(R.string.fecha) + "*");
             tipo.setHint(getString(R.string.tipo) + "*");

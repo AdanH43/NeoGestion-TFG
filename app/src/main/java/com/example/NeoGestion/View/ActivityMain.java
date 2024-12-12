@@ -41,6 +41,10 @@ public class ActivityMain extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        if (savedInstanceState == null) {
+            replaceFragment(new SimpleFragment());
+        }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -83,8 +87,6 @@ public class ActivityMain extends AppCompatActivity {
 
         String userName = mAuth.getCurrentUser().getEmail();
         String userEmail = mAuth.getCurrentUser().getDisplayName();
-
-        // Establecer la información en la cabecera
         userNameTextView.setText(userName);
         userEmailTextView.setText(userEmail);
         userImageView.setImageResource(R.drawable.baseline_person_24);

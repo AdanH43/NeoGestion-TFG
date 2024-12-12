@@ -19,12 +19,14 @@ import com.example.NeoGestion.Control.UsuarioBajaAdapter;
 import com.example.NeoGestion.Model.Usuario;
 import com.example.NeoGestion.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsuariosBajaFragment  extends Fragment {
     private RecyclerView recyclerUsuarios;
     private UsuarioBajaAdapter usuarioBajaAdapter;
     private List<Usuario> usuarioList;
+    private List<Usuario> filteredListBaja;
     private OnItemClickListener listener;
     private OnUserListChangedListener userListChangedListener;
 
@@ -32,6 +34,7 @@ public class UsuariosBajaFragment  extends Fragment {
         this.usuarioList = usuarioList;
         this.listener = listener;
         this.userListChangedListener = listener1;
+        this.filteredListBaja = new ArrayList<>(usuarioList);
     }
 
     @Nullable
@@ -40,11 +43,25 @@ public class UsuariosBajaFragment  extends Fragment {
         View view = inflater.inflate(R.layout.recycler_view_usuarios, container, false);
         recyclerUsuarios = view.findViewById(R.id.rv_usuarios);
         recyclerUsuarios.setLayoutManager(new LinearLayoutManager(getContext()));
-        usuarioBajaAdapter = new UsuarioBajaAdapter(requireContext(), usuarioList, listener);
+        usuarioBajaAdapter = new UsuarioBajaAdapter(requireContext(), filteredListBaja, listener);
         recyclerUsuarios.setAdapter(usuarioBajaAdapter);
         usuarioBajaAdapter.setOnUserListChangedListener(userListChangedListener);
         {
             return view;
+        }
+    }
+    public void filterUsuarios(String query) {
+        if (usuarioBajaAdapter != null) {
+            if (!query.isEmpty()) {
+                usuarioBajaAdapter.filtrarUsuarioBaja(query);
+            } else {
+                usuarioBajaAdapter.ResetFiltroBaja();
+            }
+        }
+    }
+    public void resetFiler() {
+        if (usuarioBajaAdapter != null) {
+            usuarioBajaAdapter.ResetFiltroBaja();
         }
     }
 }

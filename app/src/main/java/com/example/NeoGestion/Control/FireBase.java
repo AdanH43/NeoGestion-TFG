@@ -54,7 +54,6 @@ public class FireBase  {
                 .addOnFailureListener(e -> errorCallback.onCallback("Error al crear usuario: " + e.getMessage()));
     }
 
-    // Método para actualizar un usuario
     public void updateUser(String emailUser, String nombreUsuario, String correo, String nombreApellidos,
                            String telefono, String tipo, String fecha, Bitmap foto, String fechaBaja,
                            FirebaseCallback successCallback, FirebaseCallback errorCallback) {
@@ -95,7 +94,59 @@ public class FireBase  {
                 .addOnFailureListener(e -> errorCallback.onCallback("Error al buscar usuario: " + e.getMessage()));
     }
 
-    // Método para eliminar un usuario
+    public void updateProducto(String idProducto,
+                               String nombre,
+                               String referencia,
+                               double precio,
+                               String categoria,
+                               int cantidad,
+                               double stockMin,
+                               double stockMax,
+                               FirebaseCallback successCallback,
+                               FirebaseCallback errorCallback) {
+
+        String emailUsuario = mAuth.getCurrentUser().getEmail();
+
+        if (emailUsuario == null || idProducto.isEmpty() || nombre.isEmpty() || referencia.isEmpty()) {
+            errorCallback.onCallback("Campos obligatorios vacíos");
+            return;
+        }
+
+        Map<String, Object> productoMap = new HashMap<>();
+        productoMap.put("nombre", nombre);
+        productoMap.put("id", idProducto);
+        productoMap.put("referencia", referencia);
+        productoMap.put("precio", precio);
+        productoMap.put("categoria", categoria);
+        productoMap.put("cantidad", cantidad);
+        productoMap.put("stockMin", stockMin);
+        productoMap.put("stockMax", stockMax);
+
+        db.collection("Users").document(emailUsuario)
+                .collection("productos")
+                .whereEqualTo("id", idProducto)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String documentId = document.getId();
+
+                            db.collection("Users").document(emailUsuario)
+                                    .collection("productos")
+                                    .document(documentId)
+                                    .update(productoMap)
+                                    .addOnSuccessListener(aVoid -> successCallback.onCallback("Producto actualizado correctamente"))
+                                    .addOnFailureListener(e -> errorCallback.onCallback("Error al actualizar producto: " + e.getMessage()));
+                        }
+                    } else {
+                        errorCallback.onCallback("No se encontró ningún producto con el ID especificado.");
+                    }
+                })
+                .addOnFailureListener(e -> errorCallback.onCallback("Error al buscar producto: " + e.getMessage()));
+    }
+
+
+
     public void deleteUser(String emailUserToDelete, FirebaseCallback successCallback, FirebaseCallback errorCallback) {
         String emailId = mAuth.getCurrentUser().getEmail();
 
@@ -122,6 +173,27 @@ public class FireBase  {
                 })
                 .addOnFailureListener(e -> errorCallback.onCallback("Error al buscar usuario: " + e.getMessage()));
     }
+
+
+    public void deleteProducto(String iD, FirebaseCallback successCallback, FirebaseCallback errorCallback) {
+        String email = mAuth.getCurrentUser().getEmail();
+        db.collection("Users").document(email).collection("productos")
+                .whereEqualTo("id", iD).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if(!queryDocumentSnapshots.isEmpty()) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String documentId = document.getId();
+                            db.collection("Users").document(email).collection("productos").document(documentId)
+                                    .delete()
+                                    .addOnSuccessListener(aVoid -> successCallback.onCallback("Producto eliminado correctamente"))
+                                    .addOnFailureListener(e -> errorCallback.onCallback("Error al eliminar usuario"));
+                        }
+                    } else {
+                        errorCallback.onCallback("No se encontró ningún usuario con el correo especificado.");
+                    }
+                });
+    }
+
 
     public interface FirebaseCallback {
         void onCallback(String message);

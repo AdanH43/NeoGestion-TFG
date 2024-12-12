@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -34,6 +35,7 @@ import com.example.NeoGestion.Model.Usuario;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.search.SearchBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -53,7 +55,7 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     private List<Usuario> usuariosBajaList = new ArrayList<>();
     private MyPagerAdapter myPagerAdapter;
     private boolean booleanFlag = false;
-    private TextInputLayout edt_buscar;
+    private SearchView edt_buscar;
     private MainController mainController;
     private FloatingActionButton floatAdd;
     private TabLayout tab;
@@ -68,7 +70,6 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflamos el layout para el fragmento
         View view = inflater.inflate(R.layout.main_trabajadores, container, false);
 
         firebaseHelper = new FireBase();
@@ -78,7 +79,7 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
         viewPager = view.findViewById(R.id.viewPager);
         bt_select = view.findViewById(R.id.bt_select);
         floatAdd = view.findViewById(R.id.floatAdd);
-        edt_buscar = view.findViewById(R.id.filtrar_usu);
+        edt_buscar = view.findViewById(R.id.searchView);
 
 
         loadUsuariosFromFirebase();
@@ -118,11 +119,43 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
             });
         });
 
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                if (myPagerAdapter != null) {
+                    myPagerAdapter.resetFilter();
+                    edt_buscar.setQuery("", false);
+                }
+            }
+        });
+
         floatAdd.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CrearUserActivity.class);
             intent.putExtra("editar", false);
             startActivityForResult(intent, 1);
         });
+
+        edt_buscar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (myPagerAdapter != null) {
+                    myPagerAdapter.filterData(newText);
+                }
+                return false;
+            }
+        });
+
 
         return view;
     }
@@ -241,7 +274,7 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     private void showSuccessDialog(String message) {
         new AlertDialog.Builder(getActivity())
                 .setMessage(message)
-                .setPositiveButton("Aceptar", (dialog, which) -> getActivity().finish())
+                .setPositiveButton("Aceptar", null)
                 .show();
     }
 

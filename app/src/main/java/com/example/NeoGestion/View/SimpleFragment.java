@@ -15,12 +15,10 @@ import com.example.NeoGestion.R;
 
 public class SimpleFragment extends Fragment {
 
-    // Método onCreateView para inflar el layout del fragmento
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.simple_fragmet, container, false);
-
         return view;
     }
 }

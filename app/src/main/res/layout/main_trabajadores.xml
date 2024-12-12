@@ -7,26 +7,19 @@
     android:layout_height="match_parent"
     >
 
-   ¡
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/filtrar_usu"
-        android:layout_width="0dp"
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="10dp"
-        app:hintTextColor="@color/blue_600"
-        app:boxStrokeColor="@color/blue_400"
-        android:hint="@string/buscar"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:queryHint="@string/buscar"
+        android:queryBackground="@color/blue_200"
+        android:background="@drawable/searchview_background"
+        app:iconifiedByDefault="false"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tb_layout"
@@ -37,7 +30,7 @@
         app:tabIconTint="@color/blue_400"
         app:layout_constraintBottom_toTopOf="@id/fragment_container"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filtrar_usu"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
         />
 
     <androidx.viewpager2.widget.ViewPager2
@@ -63,12 +56,12 @@
 
     <ImageView
         android:id="@+id/bt_select"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginTop="5dp"
         android:layout_marginStart="15dp"
         android:src="@drawable/puntos"
-        app:layout_constraintTop_toTopOf="@id/tb_layout"
+        app:layout_constraintTop_toTopOf="@id/searchView"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -18,9 +18,10 @@ public class MyPagerAdapter extends FragmentStateAdapter {
     private List<Usuario> list = new ArrayList<>();
     private List<Usuario> listBaja = new ArrayList<>();
     private OnItemClickListener listener;
-
     private OnUserListChangedListener listener1;
-    private final boolean booleanFlag;
+    private boolean booleanFlag;
+    private UsuariosFragment usuariosFragment;
+    private UsuariosBajaFragment usuariosBajaFragment;
 
     public MyPagerAdapter(MainTrabajadores activity, List<Usuario> list, List<Usuario> listBaja, boolean booleanFlag, OnItemClickListener listener, OnUserListChangedListener listener1) {
         super(activity);
@@ -29,22 +30,32 @@ public class MyPagerAdapter extends FragmentStateAdapter {
         this.listBaja = listBaja;
         this.booleanFlag = booleanFlag;
         this.listener1 = listener1;
+        this.usuariosFragment = new UsuariosFragment(list, listener, listener1);
+        this.usuariosBajaFragment = new UsuariosBajaFragment(listBaja, listener, listener1);
     }
+
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-       switch (position) {
-           case 0 : return new UsuariosFragment(list, listener, listener1);
-
-           case 1:  return new UsuariosBajaFragment(listBaja, listener, listener1);
-       }
-        return null;
+        switch (position) {
+            case 0: return usuariosFragment;
+            case 1: return usuariosBajaFragment;
+            default: return null;
+        }
     }
 
     @Override
     public int getItemCount() {
         return 2;
     }
+
+    public void filterData(String query) {
+        usuariosFragment.filterUsuarios(query);
+        usuariosBajaFragment.filterUsuarios(query);
+    }
+
+    public void resetFilter() {
+        usuariosBajaFragment.resetFiler();
+        usuariosFragment.resetFiler();
+    }
 }
-
-
