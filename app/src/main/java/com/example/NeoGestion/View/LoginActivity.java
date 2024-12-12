@@ -149,6 +149,11 @@ public class LoginActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
+                            }).addOnFailureListener(e -> {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                builder.setMessage("Contraseña o Email incorrecto");
+                                builder.setPositiveButton("Aceptar", null);
+                                builder.show();
                             });
                 }
                 else {

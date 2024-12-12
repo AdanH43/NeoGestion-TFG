@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +107,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
     }
 
     private void barScan() {
-        IntentIntegrator integrator = new IntentIntegrator(requireActivity());
+        IntentIntegrator integrator = new IntentIntegrator(getActivity());
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setCaptureActivity(CustomCaptura.class);
         integrator.setCameraId(0);
@@ -117,10 +119,25 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 || resultCode == getActivity().RESULT_OK) {
-            loadProducts();
-            productAdapter.notifyDataSetChanged();
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() != null) {
+                String scannedCode = result.getContents();
+
+                ArticuloDetalleDialog dialog = new ArticuloDetalleDialog();
+                Bundle args = new Bundle();
+                args.putString("producto_id",scannedCode);
+                dialog.setArguments(args);
+                dialog.show(getFragmentManager(), "ArticuloDetalleDialog");
+            } else {
+                Toast.makeText(requireContext(), "Escaneo cancelado", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 1 && resultCode == getActivity().RESULT_OK) {
+                loadProducts();
+                productAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -152,9 +169,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         ArticuloDetalleDialog dialog = new ArticuloDetalleDialog();
         Bundle args = new Bundle();
         args.putString("producto_id", producto.getId());
-
         dialog.setArguments(args);
-
         dialog.show(getFragmentManager(), "ArticuloDetalleDialog");
 
     }

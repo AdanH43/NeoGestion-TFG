@@ -87,9 +87,8 @@ public class ActivityMain extends AppCompatActivity {
 
         String userName = mAuth.getCurrentUser().getEmail();
         String userEmail = mAuth.getCurrentUser().getDisplayName();
-        userNameTextView.setText(userName);
-        userEmailTextView.setText(userEmail);
+        userNameTextView.setText(userEmail);
+        userEmailTextView.setText(userName);
         userImageView.setImageResource(R.drawable.baseline_person_24);
-
     }
 }

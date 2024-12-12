@@ -32,6 +32,11 @@
         <activity android:name=".View.RegisterActivity" />
         <activity android:name=".View.ActivityMain"/>
         <activity android:name=".View.CreateProductoActivity"/>
+        <activity android:name=".View.CustomCaptura"
+            android:screenOrientation="unspecified"
+            android:stateNotNeeded="true"
+            android:theme="@style/Theme.MaterialComponents.DayNight"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
     </application>
 

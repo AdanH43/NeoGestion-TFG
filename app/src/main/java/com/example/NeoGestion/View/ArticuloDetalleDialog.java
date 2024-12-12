@@ -1,9 +1,12 @@
 package com.example.NeoGestion.View;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,6 +51,20 @@ public class ArticuloDetalleDialog extends DialogFragment {
 
         return view;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            Window window = dialog.getWindow();
+            if (window != null) {
+                window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                window.setLayout(1000, 1100);
+            }
+        }
+    }
+
     private void cargarProducto(String productoId) {
         String email = mAuth.getCurrentUser().getEmail();
         db.collection("Users")
