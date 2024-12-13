@@ -10,9 +10,11 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.NeoGestion.Control.ChatViewModel;
 import com.example.NeoGestion.Control.GeminiModel;
 import com.example.NeoGestion.Control.MessageAdapter;
 import com.example.NeoGestion.Model.Message;
@@ -28,6 +30,9 @@ public class ChatFragment extends Fragment {
     private ImageButton buttonSend;
     private List<Message> messageList;
     private MessageAdapter adapter;
+    private ChatViewModel chatViewModel;
+
+
 
     private GeminiModel geminiModel;
 
@@ -41,41 +46,44 @@ public class ChatFragment extends Fragment {
             recyclerViewMessages = view.findViewById(R.id.recyclerViewMessages);
             editTextMessage = view.findViewById(R.id.editTextMessage);
             buttonSend = view.findViewById(R.id.buttonSend);
+            chatViewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
 
-            messageList = new ArrayList<>();
-            adapter = new MessageAdapter(messageList);
+            adapter = new MessageAdapter(chatViewModel.getMessageList().getValue());
             recyclerViewMessages.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerViewMessages.setAdapter(adapter);
 
+            chatViewModel.getMessageList().observe(getViewLifecycleOwner(), messages -> {
+                adapter.notifyDataSetChanged();
+                recyclerViewMessages.scrollToPosition(messages.size() - 1);
+            });
+
             geminiModel = new GeminiModel();
 
+            chatViewModel.inicializarContexto(geminiModel);
 
-            messageList.add(new Message("Hola! Soy Gemini el asistente de NeoGestion ¿En qué puedo ayudarte?", false));
-            adapter.notifyDataSetChanged();
+            if (chatViewModel.getMessageList().getValue().isEmpty()) {
+                chatViewModel.addMessage(new Message("Hola! Soy Gemini el asistente de NeoGestion ¿En qué puedo ayudarte?", false));
+            }
 
             buttonSend.setOnClickListener(v -> {
                 String text = editTextMessage.getText().toString().trim();
                 if (!text.isEmpty()) {
-                    messageList.add(new Message(text, true));
-                    adapter.notifyDataSetChanged();
+                    chatViewModel.addMessage(new Message(text, true));
                     editTextMessage.setText("");
+
                     geminiModel.generarRespuesta(text, new GeminiModel.Callback() {
                         @Override
                         public void onSuccess(String response) {
-                            messageList.add(new Message(response, false));
-                            adapter.notifyDataSetChanged();
-                            recyclerViewMessages.scrollToPosition(messageList.size() - 1);
+                            chatViewModel.addMessage(new Message(response, false));
                         }
 
                         @Override
                         public void onFailure(Throwable error) {
-                            messageList.add(new Message("Error al generar respuesta", false));
-                            adapter.notifyDataSetChanged();
+                            chatViewModel.addMessage(new Message("Error al generar respuesta", false));
                         }
                     });
                 }
             });
-
             return view;
         }
 }

@@ -23,15 +23,35 @@ import java.util.List;
 
 public class GeminiModel {
     private String apiKey = "AIzaSyBC0uTwB2CFN9Zf-M5nrH9JiMZ2bDS9eE4";
+    private List<Message> chatHistory;
     GenerativeModel gm = new GenerativeModel("gemini-1.5-flash-001", apiKey );
     GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+
+    public GeminiModel() {
+        this.chatHistory = new ArrayList<>();
+    }
+
     public void generarRespuesta(String mensaje, Callback callback) {
-        Content content = new Content.Builder().addText(mensaje).build();
+        chatHistory.add(new Message(mensaje, true));
+
+        StringBuilder contexto = new StringBuilder();
+        for (Message msg : chatHistory) {
+            if (msg.isSentByUser()) {
+                contexto.append("Usuario: ").append(msg.getContent()).append("\n");
+            } else {
+                contexto.append("Gemini: ").append(msg.getContent()).append("\n");
+            }
+        }
+
+        Content content = new Content.Builder().addText(contexto.toString()).build();
+
         ListenableFuture<GenerateContentResponse> respuesta = model.generateContent(content);
         Futures.addCallback(respuesta, new FutureCallback<GenerateContentResponse>() {
             @Override
             public void onSuccess(GenerateContentResponse result) {
                 String respuestaGenerada = result.getText();
+                chatHistory.add(new Message(respuestaGenerada, false));
+
                 callback.onSuccess(respuestaGenerada);
             }
 
@@ -42,6 +62,32 @@ public class GeminiModel {
         }, MoreExecutors.directExecutor());
     }
 
+    public void enviarContexto(String mensaje) {
+        chatHistory.add(new Message(mensaje, true));
+
+        StringBuilder contexto = new StringBuilder();
+        for (Message msg : chatHistory) {
+            if (msg.isSentByUser()) {
+                contexto.append("Usuario: ").append(msg.getContent()).append("\n");
+            } else {
+                contexto.append("Gemini: ").append(msg.getContent()).append("\n");
+            }
+        }
+
+        Content content = new Content.Builder().addText(contexto.toString()).build();
+        ListenableFuture<GenerateContentResponse> respuesta = model.generateContent(content);
+        Futures.addCallback(respuesta, new FutureCallback<GenerateContentResponse>() {
+            @Override
+            public void onSuccess(GenerateContentResponse result) {
+                String respuestaGenerada = result.getText();
+                chatHistory.add(new Message(respuestaGenerada, false));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+            }
+        }, MoreExecutors.directExecutor());
+    }
 
     public interface Callback {
         void onSuccess(String response);
