@@ -116,7 +116,6 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
                     });
         }
     }
-
     private void barScan() {
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
@@ -127,8 +126,6 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         integrator.setOrientationLocked(false);
         integrator.initiateScan();
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -149,7 +146,6 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
             productAdapter.notifyDataSetChanged();
         }
 
-        // Llamar a super SOLO al final
         super.onActivityResult(requestCode, resultCode, data);
     }
 

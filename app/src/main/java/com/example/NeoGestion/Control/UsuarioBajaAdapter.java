@@ -87,26 +87,8 @@ public class UsuarioBajaAdapter extends RecyclerView.Adapter<UsuarioBajaViewHold
                 userListChangedListener.onUserListChanged(selectedUsers);
             }
         });
-
-        if(!usuario1.getFechaBaja().isEmpty() && edad >=18) {
-            holder.cardView.setCardBackgroundColor(Color.RED);
-            holder.tvUsuario.setTextColor(Color.WHITE);
-            holder.tvNombre.setTextColor(Color.WHITE);
-            holder.tvFecha.setTextColor(Color.WHITE);
-            holder.tvTipo.setTextColor(Color.WHITE);
-            holder.tvTelefono.setTextColor(Color.WHITE);
-            holder.tvCorreo.setTextColor(Color.WHITE);
-            holder.ldbNombre.setTextColor(Color.WHITE);
-            holder.lbTipo.setTextColor(Color.WHITE);
-            holder.lbTelefono.setTextColor(Color.WHITE);
-            holder.lbCorreo.setTextColor(Color.WHITE);
-            holder.lbFecha.setTextColor(Color.WHITE);
-            holder.lbFechaBaja.setTextColor(Color.WHITE);
-            holder.tvFechaBaja.setTextColor(Color.WHITE);
-        }
-         else {
             holder.cardView.setCardBackgroundColor(Color.WHITE);
-        }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

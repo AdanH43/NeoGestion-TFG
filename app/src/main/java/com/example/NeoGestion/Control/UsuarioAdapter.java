@@ -77,40 +77,11 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioViewHolder> {
             holder.tvTelefono.setVisibility(View.VISIBLE);
             holder.lbTelefono.setVisibility(View.VISIBLE);
         }
-        if(!usuario1.getFechaBaja().isEmpty() && edad >=18) {
-            holder.cardView.setCardBackgroundColor(Color.RED);
-            holder.tvUsuario.setTextColor(Color.WHITE);
-            holder.tvNombre.setTextColor(Color.WHITE);
-            holder.tvFecha.setTextColor(Color.WHITE);
-            holder.tvTipo.setTextColor(Color.WHITE);
-            holder.tvTelefono.setTextColor(Color.WHITE);
-            holder.tvCorreo.setTextColor(Color.WHITE);
-            holder.ldbNombre.setTextColor(Color.WHITE);
-            holder.lbTipo.setTextColor(Color.WHITE);
-            holder.lbTelefono.setTextColor(Color.WHITE);
-            holder.lbCorreo.setTextColor(Color.WHITE);
-            holder.lbFecha.setTextColor(Color.WHITE);
-            holder.lbFechaBaja.setTextColor(Color.WHITE);
-            holder.tvFechaBaja.setTextColor(Color.WHITE);
-        }
 
-        else if (edad >= 18 && usuario1.getFechaBaja().isEmpty()) {
-            holder.cardView.setCardBackgroundColor(Color.BLACK);
-            holder.tvUsuario.setTextColor(Color.WHITE);
-            holder.tvNombre.setTextColor(Color.WHITE);
-            holder.tvFecha.setTextColor(Color.WHITE);
-            holder.tvTipo.setTextColor(Color.WHITE);
-            holder.tvTelefono.setTextColor(Color.WHITE);
-            holder.tvCorreo.setTextColor(Color.WHITE);
-            holder.ldbNombre.setTextColor(Color.WHITE);
-            holder.lbTipo.setTextColor(Color.WHITE);
-            holder.lbTelefono.setTextColor(Color.WHITE);
-            holder.lbCorreo.setTextColor(Color.WHITE);
-            holder.lbFecha.setTextColor(Color.WHITE);
 
-        } else {
-            holder.cardView.setCardBackgroundColor(Color.WHITE);
-        }
+
+        holder.cardView.setCardBackgroundColor(Color.WHITE);
+
 
         if (!usuario1.getFechaBaja().isEmpty()) {
             holder.tvFechaBaja.setVisibility(View.VISIBLE);
