@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +26,8 @@ import java.util.List;
 
 public class UsuariosFragment extends Fragment {
     private RecyclerView recyclerUsuarios;
+    private TextView tvVacio;
+    private ImageView imgVacio;
     private UsuarioAdapter usuarioAdapter;
     private List<Usuario> usuarioList;
     private List<Usuario> filteredList;
@@ -34,7 +38,9 @@ public class UsuariosFragment extends Fragment {
         this.usuarioList = usuarioList;
         this.listener = listener;
         this.listener1 = listener1;
-        this.filteredList = new ArrayList<>(usuarioList);  // Inicializamos la lista filtrada
+        this.filteredList = new ArrayList<>(usuarioList);
+    }
+    public UsuariosFragment() {
     }
 
     @Nullable
@@ -42,12 +48,24 @@ public class UsuariosFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view_usuarios, container, false);
         recyclerUsuarios = view.findViewById(R.id.rv_usuarios);
+        tvVacio = view.findViewById(R.id.tv_vacio);
+        imgVacio = view.findViewById(R.id.img_vacio);
         recyclerUsuarios.setLayoutManager(new LinearLayoutManager(getContext()));
-        if (usuarioAdapter == null) {
-            usuarioAdapter = new UsuarioAdapter(requireContext(), filteredList, listener);
-            usuarioAdapter.setOnUserListChangedListener(listener1);
-            recyclerUsuarios.setAdapter(usuarioAdapter);
+        usuarioAdapter = new UsuarioAdapter(requireContext(), filteredList, listener);
+        usuarioAdapter.setOnUserListChangedListener(listener1);
+        recyclerUsuarios.setAdapter(usuarioAdapter);
+        if (filteredList.isEmpty() || filteredList == null ) {
+            recyclerUsuarios.setVisibility(View.GONE);
+            tvVacio.setVisibility(View.VISIBLE);
+            imgVacio.setVisibility(View.VISIBLE);
         }
+        else {
+            recyclerUsuarios.setVisibility(View.VISIBLE);
+            tvVacio.setVisibility(View.GONE);
+            imgVacio.setVisibility(View.GONE);
+        }
+
+
 
         return view;
     }

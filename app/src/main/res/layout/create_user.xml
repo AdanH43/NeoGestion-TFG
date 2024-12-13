@@ -14,10 +14,11 @@
         android:id="@+id/tipo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:startIconDrawable="@drawable/baseline_recent_actors_24"
         android:layout_marginLeft="50dp"
         app:hintTextColor="@color/blue_600"
         app:boxStrokeColor="@color/blue_400"
-       android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:layout_marginRight="50dp"
         android:hint="@string/tipo"
         app:layout_constraintTop_toTopOf="parent"
@@ -42,6 +43,7 @@
         app:hintTextColor="@color/blue_600"
         app:boxStrokeColor="@color/blue_400"
         android:hint="@string/user"
+        app:startIconDrawable="@drawable/baseline_person_24"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="50dp"
@@ -63,6 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"
+        app:startIconDrawable="@drawable/baseline_email_24"
         app:hintTextColor="@color/blue_600"
         app:boxStrokeColor="@color/blue_400"
         android:layout_marginLeft="50dp"
@@ -85,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/telf"
+        app:startIconDrawable="@drawable/baseline_phone_24"
         app:hintTextColor="@color/blue_600"
         app:boxStrokeColor="@color/blue_400"
         android:layout_marginLeft="50dp"
@@ -109,6 +113,7 @@
         app:hintTextColor="@color/blue_600"
         app:boxStrokeColor="@color/blue_400"
         android:layout_height="wrap_content"
+        app:startIconDrawable="@drawable/baseline_person_24"
         android:hint="@string/nombre_apellidos"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
@@ -129,6 +134,7 @@
         android:id="@+id/lb_fecha"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:drawableStart="@drawable/baseline_calendar_month_24"
         android:text="@string/lb_fecha_nacimiento"
         android:layout_marginStart="50dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -137,7 +143,7 @@
 
        <TextView
            android:id="@+id/fecha"
-           android:layout_width="0dp"
+           android:layout_width="150dp"
            android:layout_height="wrap_content"
            android:hint="@string/fecha"
            android:layout_marginTop="30dp"
@@ -153,11 +159,12 @@
 
     <TextView
         android:id="@+id/lb_foto"
-        android:layout_width="90dp"
-        android:layout_height="40dp"
+        android:layout_width="110dp"
+        android:layout_height="0dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="35dp"
         android:text="@string/foto"
+        android:drawableStart="@drawable/baseline_photo_camera_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/imagen_perfil" />
 
@@ -197,6 +204,6 @@
         android:layout_marginTop="30dp"
         android:text="@string/editar_user"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lb_foto" />
+        app:layout_constraintTop_toBottomOf="@id/imagen_perfil" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

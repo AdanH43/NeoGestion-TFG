@@ -13,8 +13,8 @@ import java.util.List;
 public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
     private List<Message> messages;
-    private static final int TYPE_SENT = 1;
-    private static final int TYPE_RECEIVED = 2;
+    private static final int menEnviado = 1;
+    private static final int menRecibido = 2;
 
     public MessageAdapter(List<Message> messages) {
         this.messages = messages;
@@ -23,14 +23,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     @Override
     public int getItemViewType(int position) {
         Message message = messages.get(position);
-        return message.isSentByUser() ? TYPE_SENT : TYPE_RECEIVED;
+        return message.isRol() ? menEnviado : menRecibido;
     }
 
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        if (viewType == TYPE_SENT) {
+        if (viewType == menEnviado) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message_received, parent, false);

@@ -62,7 +62,6 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     private TabLayout tab;
     private ViewPager2 viewPager;
     private FirebaseAuth mAuth;
-    private Usuario usuario;
     FireBase firebaseHelper;
     private ProgressDialog progressDialog;
 

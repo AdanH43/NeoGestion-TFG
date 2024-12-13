@@ -1,18 +1,10 @@
 package com.example.NeoGestion.Control;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.AsyncTask;
-
 import com.example.NeoGestion.Model.Message;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
-import com.google.ai.client.generativeai.type.BlockThreshold;
 import com.google.ai.client.generativeai.type.Content;
 import com.google.ai.client.generativeai.type.GenerateContentResponse;
-import com.google.ai.client.generativeai.type.GenerationConfig;
-import com.google.ai.client.generativeai.type.HarmCategory;
-import com.google.ai.client.generativeai.type.SafetySetting;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -36,13 +28,12 @@ public class GeminiModel {
 
         StringBuilder contexto = new StringBuilder();
         for (Message msg : chatHistory) {
-            if (msg.isSentByUser()) {
-                contexto.append("Usuario: ").append(msg.getContent()).append("\n");
+            if (msg.isRol()) {
+                contexto.append("Usuario: ").append(msg.getMensaje()).append("\n");
             } else {
-                contexto.append("Gemini: ").append(msg.getContent()).append("\n");
+                contexto.append("Gemini: ").append(msg.getMensaje()).append("\n");
             }
         }
-
         Content content = new Content.Builder().addText(contexto.toString()).build();
 
         ListenableFuture<GenerateContentResponse> respuesta = model.generateContent(content);
@@ -67,10 +58,10 @@ public class GeminiModel {
 
         StringBuilder contexto = new StringBuilder();
         for (Message msg : chatHistory) {
-            if (msg.isSentByUser()) {
-                contexto.append("Usuario: ").append(msg.getContent()).append("\n");
+            if (msg.isRol()) {
+                contexto.append("Usuario: ").append(msg.getMensaje()).append("\n");
             } else {
-                contexto.append("Gemini: ").append(msg.getContent()).append("\n");
+                contexto.append("Gemini: ").append(msg.getMensaje()).append("\n");
             }
         }
 

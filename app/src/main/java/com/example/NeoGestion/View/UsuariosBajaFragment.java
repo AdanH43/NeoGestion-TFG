@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +26,8 @@ import java.util.List;
 
 public class UsuariosBajaFragment  extends Fragment {
     private RecyclerView recyclerUsuarios;
+    private TextView tvVacio;
+    private ImageView imgVacio;
     private UsuarioBajaAdapter usuarioBajaAdapter;
     private List<Usuario> usuarioList;
     private List<Usuario> filteredListBaja;
@@ -36,19 +40,30 @@ public class UsuariosBajaFragment  extends Fragment {
         this.userListChangedListener = listener1;
         this.filteredListBaja = new ArrayList<>(usuarioList);
     }
+    public UsuariosBajaFragment() {}
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view_usuarios, container, false);
+        tvVacio = view.findViewById(R.id.tv_vacio);
+        imgVacio = view.findViewById(R.id.img_vacio);
         recyclerUsuarios = view.findViewById(R.id.rv_usuarios);
         recyclerUsuarios.setLayoutManager(new LinearLayoutManager(getContext()));
         usuarioBajaAdapter = new UsuarioBajaAdapter(requireContext(), filteredListBaja, listener);
         recyclerUsuarios.setAdapter(usuarioBajaAdapter);
         usuarioBajaAdapter.setOnUserListChangedListener(userListChangedListener);
-        {
-            return view;
+        if (filteredListBaja.isEmpty() || filteredListBaja == null ) {
+            recyclerUsuarios.setVisibility(View.GONE);
+            tvVacio.setVisibility(View.VISIBLE);
+            imgVacio.setVisibility(View.VISIBLE);
         }
+        else {
+            recyclerUsuarios.setVisibility(View.VISIBLE);
+            tvVacio.setVisibility(View.GONE);
+            imgVacio.setVisibility(View.GONE);
+        }
+        return view;
     }
     public void filterUsuarios(String query) {
         if (usuarioBajaAdapter != null) {

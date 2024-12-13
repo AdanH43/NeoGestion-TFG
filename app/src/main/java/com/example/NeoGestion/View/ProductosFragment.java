@@ -36,8 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductosFragment extends Fragment implements OnItemClickProducto {
-    private static final int REQUEST_CODE_BARSCAN = 100;
-    private static final int REQUEST_CODE_OTHER = 101;
     private RecyclerView recyclerView;
     private FloatingActionButton floatAdd;
     private RecyclerArticulo productAdapter;
@@ -173,7 +171,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
             intent.putExtra("editar", true);
             intent.putExtra("objeto", producto);
             intent.putExtra("producto_Id", producto.getId());
-            startActivityForResult(intent, REQUEST_CODE_OTHER);
+            startActivityForResult(intent, 1);
         });
         builder.show();
     }

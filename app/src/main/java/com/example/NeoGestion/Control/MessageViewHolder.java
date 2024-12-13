@@ -18,6 +18,6 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(Message message) {
-        textViewMessage.setText(message.getContent());
+        textViewMessage.setText(message.getMensaje());
     }
 }

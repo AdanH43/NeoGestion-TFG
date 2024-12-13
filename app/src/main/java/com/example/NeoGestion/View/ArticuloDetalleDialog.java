@@ -15,6 +15,7 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.NeoGestion.Model.Producto;
 import com.example.NeoGestion.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -85,6 +86,10 @@ public class ArticuloDetalleDialog extends DialogFragment {
                                 tvCategoria.setText(producto.getCategoria());
                                 tvStockMax.setText(String.valueOf(producto.getStockMax()));
                                 tvStockMin.setText(String.valueOf(producto.getStockMin()));
+                            }
+                            else {
+                                Snackbar snackbar = Snackbar.make(getView(), "Producto no encontrado", Snackbar.LENGTH_LONG);
+                                snackbar.show();
                             }
                         }
                     }

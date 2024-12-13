@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
@@ -34,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -53,9 +55,6 @@ public class CrearUserActivity extends AppCompatActivity {
     private TextView text, lb_fecha;
     private boolean editar = false;
     private SwitchMaterial stw_baja;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 2;
-    private double latitude;
-    private double longitude;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -129,11 +128,12 @@ public class CrearUserActivity extends AppCompatActivity {
             datePicker.show(getSupportFragmentManager(), "tag");
         });
         imagen.setOnClickListener(view -> {
-            Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(intent1, 1);
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent chooserIntent = Intent.createChooser(galleryIntent, "Seleccionar Imagen");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { cameraIntent });
+            startActivityForResult(chooserIntent, 1);
         });
-
-
 
         btcrearusuario.setOnClickListener(view -> {
             if (editar) {
@@ -169,8 +169,21 @@ public class CrearUserActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-        imagen.setImageBitmap(bitmap);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                Uri imageUri = data.getData();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    imagen.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Bundle extras = data.getExtras();
+                Bitmap imageBitmap = (Bitmap) extras.get("data");
+                imagen.setImageBitmap(imageBitmap);
+            }
+        }
     }
 
     private void showErrorDialog(String message) {

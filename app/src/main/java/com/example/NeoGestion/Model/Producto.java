@@ -60,10 +60,6 @@ public class Producto implements Parcelable {
         return referencia;
     }
 
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
-    }
-
     public String getId() {
         return id;
     }
@@ -94,26 +90,6 @@ public class Producto implements Parcelable {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
-    }
-
-    public void setCantidad(int cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public void setStockMax(double stockMax) {
-        this.stockMax = stockMax;
-    }
-
-    public void setStockMin(double stockMin) {
-        this.stockMin = stockMin;
     }
 
     @Override

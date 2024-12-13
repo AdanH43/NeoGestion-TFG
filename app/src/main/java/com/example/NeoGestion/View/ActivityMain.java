@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -47,26 +48,31 @@ public class ActivityMain extends AppCompatActivity {
         }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(false);
+
                 if (item.getItemId() == R.id.nav_home) {
                     replaceFragment(new SimpleFragment());
+
                     item.setChecked(true);
                 }
                  else if (item.getItemId() == R.id.nav_usuarios) {
                     replaceFragment(new MainTrabajadores());
+
                     item.setChecked(true);
                 } else if (item.getItemId() == R.id.nav_productos) {
                     item.setChecked(true);
+
                     replaceFragment(new ProductosFragment());
                 } else if (item.getItemId() == R.id.nav_chat) {
                      item.setChecked(true);
+
                      replaceFragment(new ChatFragment());
                 } else if (item.getItemId() == R.id.nav_cerrar) {
                     mAuth.signOut();
                     finish();
-
                 }
                 if (previousMenuItem != null) {
                     previousMenuItem.setChecked(false);
@@ -78,6 +84,11 @@ public class ActivityMain extends AppCompatActivity {
         });
         updateNavHeader();
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        replaceFragment(new SimpleFragment());
+    }
     private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -85,7 +96,6 @@ public class ActivityMain extends AppCompatActivity {
         transaction.commit();
     }
     private void updateNavHeader() {
-
 
         View headerView = navigationView.getHeaderView(0);
         TextView userNameTextView = headerView.findViewById(R.id.user_name);

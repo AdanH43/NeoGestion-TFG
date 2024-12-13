@@ -33,8 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btiniciar;
     private TextView btregistrar, bt_forgot;
     private TextInputLayout edtusuemail, edtcontraseña;
-    private static final String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.POST_NOTIFICATIONS};
-    private static final String BACKGROUND_LOCATION_PERMISSION = Manifest.permission.ACCESS_BACKGROUND_LOCATION;
+    private static final String[] PERMISSIONS = {Manifest.permission.CAMERA, Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private int currentPermissionIndex = 0;
     private final static String CHANNEL_ID = "NOTIFICATION";
 
@@ -176,18 +175,8 @@ public class LoginActivity extends AppCompatActivity {
                 currentPermissionIndex++;
                 requestNextPermission();
             }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (ContextCompat.checkSelfPermission(this, BACKGROUND_LOCATION_PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{BACKGROUND_LOCATION_PERMISSION}, 100);
-            } else {
-
-            }
-        } else {
-
         }
-    }
-
-
+        }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

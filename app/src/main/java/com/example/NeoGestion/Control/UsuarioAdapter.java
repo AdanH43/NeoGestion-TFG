@@ -134,12 +134,6 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioViewHolder> {
             return userListFilstrada.size();
         }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        userlist = usuarios;
-        userListFilstrada = usuarios;
-        notifyDataSetChanged();
-    }
-
     public List<Usuario> filtrarUsuario(String filtro) {
         userListFilstrada.clear();
         for(Usuario usuario : userlist) {
@@ -163,11 +157,6 @@ public class UsuarioAdapter extends RecyclerView.Adapter<UsuarioViewHolder> {
         return userListFilstrada;
 
     }
-
-    public List<Usuario> getFiltList() {
-        return userListFilstrada;
-    }
-
     public void setOnUserListChangedListener(OnUserListChangedListener listener) {
         this.userListChangedListener = listener;
     }

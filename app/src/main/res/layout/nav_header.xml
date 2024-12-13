@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
+
     android:background="?android:attr/windowBackground"
     android:backgroundTint="@color/blue_300">
 
@@ -12,15 +13,14 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_gravity="center"
-        android:src="@drawable/baseline_recent_actors_24"
         android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nombre de Usuario"
         android:textStyle="bold"
+        android:textSize="25dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:layout_gravity="center"
         android:paddingTop="8dp"
@@ -30,12 +30,8 @@
         android:id="@+id/user_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="usuario@example.com"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_gravity="center"
         android:paddingTop="4dp" />
-
-
-
 
 </LinearLayout>

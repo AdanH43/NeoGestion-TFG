@@ -145,16 +145,6 @@ public class UsuarioBajaAdapter extends RecyclerView.Adapter<UsuarioBajaViewHold
         return userListFiltrada;
 
     }
-    public List<Usuario> getFiltList() {
-        return userListFiltrada;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        userListFiltrada = usuarios;
-        userlist = usuarios;
-        notifyDataSetChanged();
-    }
-
     public void setOnUserListChangedListener(OnUserListChangedListener listener) {
         this.userListChangedListener = listener;
     }

@@ -132,13 +132,11 @@ public class RegisterActivity extends AppCompatActivity {
                 .document(uid)
                 .set(userData)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("Firestore", "Usuario creado correctamente en Firestore.");
                     Toast.makeText(this,
-                            "Usuario creado y guardado en Firestore.",
+                            "Usuario creado.",
                             Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error al guardar el usuario: ", e);
                     Toast.makeText(this,
                             "Error al guardar el usuario en Firestore.",
                             Toast.LENGTH_SHORT).show();

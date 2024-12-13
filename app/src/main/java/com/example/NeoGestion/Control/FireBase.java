@@ -33,7 +33,7 @@ public class FireBase  {
         String emailId = mAuth.getCurrentUser().getEmail();
         String fotoString = MainController.getSingleton().BitMapToString(foto);
 
-        if (emailId == null || nombreUsuario.isEmpty() || correo.isEmpty()) {
+        if (emailId == null || nombreUsuario.isEmpty() || correo.isEmpty()  || tipo.isEmpty() || fecha.isEmpty()) {
             errorCallback.onCallback("Campos obligatorios vacíos");
             return;
         }
@@ -107,7 +107,7 @@ public class FireBase  {
 
         String emailUsuario = mAuth.getCurrentUser().getEmail();
 
-        if (emailUsuario == null || idProducto.isEmpty() || nombre.isEmpty() || referencia.isEmpty()) {
+        if (emailUsuario == null || idProducto.isEmpty() || nombre.isEmpty() || referencia.isEmpty() || categoria.isEmpty() || precio == 0 || cantidad == 0 || stockMin == 0 || stockMax == 0) {
             errorCallback.onCallback("Campos obligatorios vacíos");
             return;
         }
@@ -193,7 +193,6 @@ public class FireBase  {
                     }
                 });
     }
-
 
     public interface FirebaseCallback {
         void onCallback(String message);

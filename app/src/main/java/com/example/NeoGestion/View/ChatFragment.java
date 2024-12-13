@@ -28,7 +28,6 @@ public class ChatFragment extends Fragment {
     private RecyclerView recyclerViewMessages;
     private EditText editTextMessage;
     private ImageButton buttonSend;
-    private List<Message> messageList;
     private MessageAdapter adapter;
     private ChatViewModel chatViewModel;
 

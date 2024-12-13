@@ -6,28 +6,23 @@
     android:padding="16dp"
     android:gravity="center">
 
-    <!-- Logo -->
     <ImageView
-        android:id="@+id/imageViewLogo"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/logo"
         />
-
-    <!-- Mensaje de Bienvenida -->
+    
     <TextView
-        android:id="@+id/textViewWelcome"
+        android:id="@+id/tv_bienvenido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bienvenido, Adan"
+        android:text=""
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/black"/>
 
-    <!-- Mensaje adicional -->
     <TextView
-        android:id="@+id/textViewInstructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Empieza agregando tus usuarios y productos"
