@@ -1,5 +1,6 @@
 package com.example.NeoGestion.View;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,12 +54,19 @@ public class ActivityMain extends AppCompatActivity {
                     replaceFragment(new SimpleFragment());
                     item.setChecked(true);
                 }
-                if (item.getItemId() == R.id.nav_usuarios) {
+                 else if (item.getItemId() == R.id.nav_usuarios) {
                     replaceFragment(new MainTrabajadores());
                     item.setChecked(true);
                 } else if (item.getItemId() == R.id.nav_productos) {
                     item.setChecked(true);
                     replaceFragment(new ProductosFragment());
+                } else if (item.getItemId() == R.id.nav_chat) {
+                     item.setChecked(true);
+                     replaceFragment(new ChatFragment());
+                } else if (item.getItemId() == R.id.nav_cerrar) {
+                    mAuth.signOut();
+                    finish();
+
                 }
                 if (previousMenuItem != null) {
                     previousMenuItem.setChecked(false);

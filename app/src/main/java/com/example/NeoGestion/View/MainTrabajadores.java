@@ -1,5 +1,6 @@
 package com.example.NeoGestion.View;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,6 +64,7 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     private FirebaseAuth mAuth;
     private Usuario usuario;
     FireBase firebaseHelper;
+    private ProgressDialog progressDialog;
 
     public MainTrabajadores() {
 
@@ -81,6 +83,10 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
         floatAdd = view.findViewById(R.id.floatAdd);
         edt_buscar = view.findViewById(R.id.searchView);
 
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Cargando tus usuarios...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
 
         loadUsuariosFromFirebase();
 
@@ -194,6 +200,7 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     }
 
     private void loadUsuariosFromFirebase() {
+        progressDialog.show();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         db.collection("Users")
@@ -257,6 +264,7 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
                                     break;
                             }
                         }).attach();
+                        progressDialog.dismiss();
                     } else {
                         Log.d("Firestore", "No hay usuarios en la subcolección");
                     }

@@ -17,6 +17,18 @@
         android:icon="@drawable/baseline_inventory_24"
         android:background="@color/blue_600"
         android:title="Productos" />
+    <item
+        android:id="@+id/nav_chat"
+        android:icon="@drawable/baseline_chat_24"
+        android:background="@color/blue_600"
+        android:title="Chat"
+        />
+    <item
+        android:id="@+id/nav_cerrar"
+        android:icon="@drawable/baseline_output_24"
+        android:title="Cerrar Sesion"
+        android:background="@color/blue_600"
+        />
 
 
 </menu>

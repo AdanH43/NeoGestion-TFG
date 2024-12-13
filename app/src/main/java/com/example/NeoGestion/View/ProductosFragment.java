@@ -1,5 +1,7 @@
 package com.example.NeoGestion.View;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -32,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductosFragment extends Fragment implements OnItemClickProducto {
-    private static final int SCAN_REQUEST_CODE = 1;
-    private static final int OTHER_REQUEST_CODE = 2;
+    private static final int REQUEST_CODE_BARSCAN = 100;
+    private static final int REQUEST_CODE_OTHER = 101;
     private RecyclerView recyclerView;
     private FloatingActionButton floatAdd;
     private RecyclerArticulo productAdapter;
@@ -43,6 +47,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     FireBase firebaseHelper;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +57,11 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         edtBuscar = view.findViewById(R.id.buscar);
         btEscaner = view.findViewById(R.id.bt_escaner);
         firebaseHelper = new FireBase();
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Cargando tus productos...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+
         loadProducts();
         recyclerView = view.findViewById(R.id.recycler_view_products);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -87,6 +97,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         return view;
     }
     private void loadProducts() {
+        progressDialog.show();
         String emailUsuario = mAuth.getCurrentUser().getEmail();
         if (emailUsuario != null) {
             db.collection("Users").document(emailUsuario)
@@ -100,14 +111,16 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
                         }
                         productAdapter = new RecyclerArticulo(productList, this);
                         recyclerView.setAdapter(productAdapter);
+                        progressDialog.dismiss();
                     })
                     .addOnFailureListener(e -> {
+                        progressDialog.dismiss();
                     });
         }
     }
 
     private void barScan() {
-        IntentIntegrator integrator = new IntentIntegrator(getActivity());
+        IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setCaptureActivity(CustomCaptura.class);
         integrator.setCameraId(0);
@@ -117,28 +130,29 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         integrator.initiateScan();
     }
 
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() != null) {
                 String scannedCode = result.getContents();
-
                 ArticuloDetalleDialog dialog = new ArticuloDetalleDialog();
                 Bundle args = new Bundle();
-                args.putString("producto_id",scannedCode);
+                args.putString("producto_id", scannedCode);
                 dialog.setArguments(args);
-                dialog.show(getFragmentManager(), "ArticuloDetalleDialog");
+                dialog.show(requireActivity().getSupportFragmentManager(), "ArticuloDetalleDialog");
             } else {
                 Toast.makeText(requireContext(), "Escaneo cancelado", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-            if (requestCode == 1 && resultCode == getActivity().RESULT_OK) {
-                loadProducts();
-                productAdapter.notifyDataSetChanged();
-            }
+        } else if (requestCode == 1) {
+            loadProducts();
+            productAdapter.notifyDataSetChanged();
         }
+
+        // Llamar a super SOLO al final
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -159,7 +173,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
             intent.putExtra("editar", true);
             intent.putExtra("objeto", producto);
             intent.putExtra("producto_Id", producto.getId());
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, REQUEST_CODE_OTHER);
         });
         builder.show();
     }
@@ -170,8 +184,7 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         Bundle args = new Bundle();
         args.putString("producto_id", producto.getId());
         dialog.setArguments(args);
-        dialog.show(getFragmentManager(), "ArticuloDetalleDialog");
-
+        dialog.show(requireActivity().getSupportFragmentManager(), "ArticuloDetalleDialog");
     }
 
     private void showErrorDialog(String message) {
