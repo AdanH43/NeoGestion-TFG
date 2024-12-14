@@ -265,10 +265,13 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
                         }).attach();
                         progressDialog.dismiss();
                     } else {
+                        progressDialog.dismiss();
                         Log.d("Firestore", "No hay usuarios en la subcolección");
                     }
                 })
-                .addOnFailureListener(e -> Log.e("Firestore", "Error al obtener los documentos", e));
+                .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                });
     }
 
     private void showErrorDialog(String message) {
