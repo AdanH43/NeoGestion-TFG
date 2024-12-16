@@ -136,6 +136,8 @@ public class CrearUserActivity extends AppCompatActivity {
                 }
                 String nombreUsuario = edtcrearusu.getEditText().getText().toString().trim();
                 String correo = edtcrearcorreo.getEditText().getText().toString().trim();
+                edtcrearcorreo.setFocusable(false);
+                edtcrearcorreo.setClickable(false);
                 String nombreApellidos = edtnombreapellidos.getEditText().getText().toString().trim();
                 String telefono = edtcreartlf.getEditText().getText().toString().trim();
                 String tipo = spinnertipo.getText().toString().trim();
@@ -143,6 +145,8 @@ public class CrearUserActivity extends AppCompatActivity {
                 firebaseHelper.updateUser(correo, nombreUsuario, correo , nombreApellidos, telefono, tipo, text.getText().toString(), bitmap, fecha_baja , message -> showSuccessDialog(message),
                         message -> showErrorDialog(message));
             } else {
+                edtcrearcorreo.setFocusable(true);
+                edtcrearcorreo.setClickable(true);
                 String nombreUsuario = edtcrearusu.getEditText().getText().toString().trim();
                 String correo = edtcrearcorreo.getEditText().getText().toString().trim();
                 String nombreApellidos = edtnombreapellidos.getEditText().getText().toString().trim();
