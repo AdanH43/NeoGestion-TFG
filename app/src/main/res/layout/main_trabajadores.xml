@@ -68,9 +68,9 @@
         android:id="@+id/floatAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:backgroundTint="@color/blue_300"
-        app:layout_constraintEnd_toEndOf="@+id/viewPager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="30dp"
         android:src="@drawable/baseline_add_24"
         />

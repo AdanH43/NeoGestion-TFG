@@ -1,7 +1,6 @@
 package com.example.NeoGestion.View;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.NeoGestion.Control.ChatViewModel;
 import com.example.NeoGestion.Control.GeminiModel;
 import com.example.NeoGestion.Control.MessageAdapter;
 import com.example.NeoGestion.Model.Message;
 import com.example.NeoGestion.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ChatFragment extends Fragment {
 
@@ -75,7 +70,6 @@ public class ChatFragment extends Fragment {
                         public void onSuccess(String response) {
                             chatViewModel.addMessage(new Message(response, false));
                         }
-
                         @Override
                         public void onFailure(Throwable error) {
                             chatViewModel.addMessage(new Message("Error al generar respuesta", false));

@@ -46,6 +46,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainTrabajadores extends Fragment implements OnItemClickListener, OnUserListChangedListener {
@@ -72,22 +73,18 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_trabajadores, container, false);
-
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Cargando tus usuarios...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.show();
         firebaseHelper = new FireBase();
         mAuth = FirebaseAuth.getInstance();
-
         tab = view.findViewById(R.id.tb_layout);
         viewPager = view.findViewById(R.id.viewPager);
         bt_select = view.findViewById(R.id.bt_select);
         floatAdd = view.findViewById(R.id.floatAdd);
         edt_buscar = view.findViewById(R.id.searchView);
-
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Cargando tus usuarios...");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-
-        loadUsuariosFromFirebase();
 
         bt_select.setOnClickListener(v -> {
             BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
@@ -106,7 +103,15 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
                             .setPositiveButton(R.string.aceptar, (dialog, which) -> {
                                 for (Usuario usuario : selectedUsers) {
                                     firebaseHelper.deleteUser(usuario.getCorreo(),
-                                            message -> showSuccessDialog(message),
+                                            message -> {
+                                                if(usuario.getFechaBaja() != "") {
+                                                    usuariosBajaList.remove(usuario);
+                                                } else {
+                                                    usuariosList.remove(usuario);
+                                                }
+                                                loadUsuariosFromFirebase();
+                                                showSuccessDialog(message);
+                                            },
                                             message -> showErrorDialog(message));
                                 }
                             })
@@ -166,19 +171,30 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadUsuariosFromFirebase();
+    }
+
+    @Override
     public void onItemClick(Usuario usuario) {
         AlertDialog.Builder builder;
         Intent intent = new Intent(getActivity(), CrearUserActivity.class);
         builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.que_hacer);
         builder.setNegativeButton(R.string.eliminar, (dialogInterface, i) -> {
-            String correoUser = usuario.getCorreo();
-            firebaseHelper.deleteUser(correoUser,
+            firebaseHelper.deleteUser(usuario.getCorreo(),
                     message -> {
+                        if(usuario.getFechaBaja() != "") {
+                            usuariosBajaList.remove(usuario);
+                        } else {
+                            usuariosList.remove(usuario);
+                        }
                         loadUsuariosFromFirebase();
                         showSuccessDialog(message);
                     },
                     message -> showErrorDialog(message));
+
         });
         builder.setPositiveButton(R.string.editar, (dialog, which) -> {
             intent.putExtra("editar", true);
@@ -199,7 +215,6 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
     }
 
     private void loadUsuariosFromFirebase() {
-        progressDialog.show();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         db.collection("Users")
@@ -240,38 +255,44 @@ public class MainTrabajadores extends Fragment implements OnItemClickListener, O
                             }
                         }
 
-                        myPagerAdapter = new MyPagerAdapter(this, usuariosList, usuariosBajaList, booleanFlag, this, this);
-                        viewPager.setAdapter(myPagerAdapter);
-                        tab.setTabTextColors(
-                                ContextCompat.getColor(requireContext(), R.color.blue_200),
-                                ContextCompat.getColor(requireContext(), R.color.blue_400)
-                        );
-                        tab.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.blue_600));
-
-                        new TabLayoutMediator(tab, viewPager, (tab, position) -> {
-                            switch (position) {
-                                case 0:
-                                    tab.setText("Activos");
-                                    tab.setIcon(R.drawable.baseline_recent_actors_24);
-                                    break;
-                                case 1:
-                                    tab.setText("Dados de Baja");
-                                    tab.setIcon(R.drawable.baseline_no_accounts_24);
-                                    break;
-                                default:
-                                    tab.setText(null);
-                                    break;
-                            }
-                        }).attach();
-                        progressDialog.dismiss();
+                        configurarAdapter();
                     } else {
-                        progressDialog.dismiss();
-                        Log.d("Firestore", "No hay usuarios en la subcolección");
                     }
+                    progressDialog.dismiss();
                 })
                 .addOnFailureListener(e -> {
                     progressDialog.dismiss();
                 });
+        if (usuariosList.isEmpty() && usuariosBajaList.isEmpty()) {
+            configurarAdapter();
+
+        }
+    }
+
+    private void configurarAdapter() {
+        myPagerAdapter = new MyPagerAdapter(this, usuariosList, usuariosBajaList, booleanFlag, this, this);
+        viewPager.setAdapter(myPagerAdapter);
+        tab.setTabTextColors(
+                ContextCompat.getColor(requireContext(), R.color.blue_200),
+                ContextCompat.getColor(requireContext(), R.color.blue_400)
+        );
+        tab.setSelectedTabIndicatorColor(ContextCompat.getColor(requireContext(), R.color.blue_600));
+
+        new TabLayoutMediator(tab, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0:
+                    tab.setText("Activos");
+                    tab.setIcon(R.drawable.baseline_recent_actors_24);
+                    break;
+                case 1:
+                    tab.setText("Dados de Baja");
+                    tab.setIcon(R.drawable.baseline_no_accounts_24);
+                    break;
+                default:
+                    tab.setText(null);
+                    break;
+            }
+        }).attach();
     }
 
     private void showErrorDialog(String message) {

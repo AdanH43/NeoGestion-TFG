@@ -51,7 +51,7 @@ public class FireBase  {
         db.collection("Users").document(emailId).collection("usuarios")
                 .add(userMap)
                 .addOnSuccessListener(documentReference -> successCallback.onCallback("Usuario creado correctamente"))
-                .addOnFailureListener(e -> errorCallback.onCallback("Error al crear usuario: " + e.getMessage()));
+                .addOnFailureListener(e -> errorCallback.onCallback("Error al crear usuario:" + e.getMessage()));
     }
 
     public void updateUser(String emailUser, String nombreUsuario, String correo, String nombreApellidos,

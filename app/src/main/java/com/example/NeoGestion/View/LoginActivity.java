@@ -139,7 +139,6 @@ public class LoginActivity extends AppCompatActivity {
                                             Intent intent = new Intent(LoginActivity.this, ActivityMain.class);
                                             intent.putExtra("usuario_actual", user.getDisplayName());
                                             startActivity(intent);
-
                                             edtusuemail.getEditText().setText("");
                                             edtcontraseña.getEditText().setText("");
                                         } else {

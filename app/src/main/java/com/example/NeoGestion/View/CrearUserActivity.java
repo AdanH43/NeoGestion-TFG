@@ -1,9 +1,9 @@
 package com.example.NeoGestion.View;
 
+import static com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE;
+
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,29 +11,27 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.NeoGestion.Control.FireBase;
-import com.example.NeoGestion.Control.MainController;
 import com.example.NeoGestion.Model.Usuario;
 import com.example.NeoGestion.R;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -41,9 +39,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class CrearUserActivity extends AppCompatActivity {
     int idNotificacion = 0;
@@ -104,10 +100,6 @@ public class CrearUserActivity extends AppCompatActivity {
         } else {
             edtcrearcorreo.setFocusable(true);
             edtcrearcorreo.setClickable(true);
-            edtcrearcorreo.getEditText().setHint(getString(R.string.email) + "*");
-            edtcrearusu.getEditText().setHint(getString(R.string.user) + "*");
-            lb_fecha.setText(getString(R.string.fecha) + "*");
-            tipo.setHint(getString(R.string.tipo) + "*");
             btcrearusuario.setText(getString(R.string.crear_user));
             stw_baja.setVisibility(View.GONE);
         }
@@ -128,11 +120,7 @@ public class CrearUserActivity extends AppCompatActivity {
             datePicker.show(getSupportFragmentManager(), "tag");
         });
         imagen.setOnClickListener(view -> {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            Intent chooserIntent = Intent.createChooser(galleryIntent, "Seleccionar Imagen");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { cameraIntent });
-            startActivityForResult(chooserIntent, 1);
+            requestPermissions();
         });
 
         btcrearusuario.setOnClickListener(view -> {
@@ -186,6 +174,18 @@ public class CrearUserActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                imagen.performClick();
+            } else {
+                Toast.makeText(this, "Permisos denegados", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private void showErrorDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(CrearUserActivity.this);
         builder.setMessage(message)
@@ -199,5 +199,22 @@ public class CrearUserActivity extends AppCompatActivity {
                 .setPositiveButton("Aceptar", (dialog, which) -> finish())
                 .show();
     }
+
+    private void requestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, REQUEST_CODE);
+        } else {
+            startImagenChoose();
+        }
+    }
+    private void startImagenChoose() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent chooserIntent = Intent.createChooser(galleryIntent, "Seleccionar Imagen");
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] { cameraIntent });
+        startActivityForResult(chooserIntent, 1);
+    }
+
 }
 

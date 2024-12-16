@@ -1,5 +1,10 @@
 package com.example.NeoGestion.View;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -7,7 +12,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import com.example.NeoGestion.Control.FireBase;
 import com.example.NeoGestion.R;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,21 +32,24 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btcrea_rusuario;
     private FirebaseAuth auth;
     private FirebaseFirestore firestore;
+    FireBase firebaseHelper;
+    private static final String CHANNEL_ID = "my_channel_id";
+    private static final int NOTIFICATION_ID = 1;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register);
-
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
-
-
+        firebaseHelper = new FireBase();
         edt_confirmpass = findViewById(R.id.edt_confirmpass);
         edt_correo = findViewById(R.id.edtcrear_correo);
         edt_crear_contra = findViewById(R.id.edtcrear_contra);
         edt_crear_usu = findViewById(R.id.edtcrear_usu);
         btcrea_rusuario = findViewById(R.id.btcrea_rusuario);
+        createNotificationChannel();
 
 
         btcrea_rusuario.setOnClickListener(view -> {
@@ -74,23 +86,18 @@ public class RegisterActivity extends AppCompatActivity {
 
                         FirebaseUser user = auth.getCurrentUser();
                         if (user != null) {
-
                             actualizarNombreDeUsuario(user, usuario);
 
 
                             user.sendEmailVerification()
                                     .addOnCompleteListener(emailTask -> {
                                         if (emailTask.isSuccessful()) {
-                                            Toast.makeText(this,
-                                                    "Correo de verificación enviado. Verifícalo antes de iniciar sesión.",
-                                                    Toast.LENGTH_LONG).show();
-
+                                            Toast.makeText(this, "Correo de verificación enviado. Verifícalo antes de iniciar sesión.", Toast.LENGTH_LONG).show();
+                                            showVerificationNotification();
                                             auth.signOut();
                                             finish();
                                         } else {
-                                            Toast.makeText(this,
-                                                    "Error al enviar el correo de verificación.",
-                                                    Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(this, "Error al enviar el correo de verificación.", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
@@ -109,14 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this,
-                                "Nombre de usuario actualizado: " + user.getDisplayName(),
-                                Toast.LENGTH_SHORT).show();
                         crearUsuarioEnFirestore(user.getUid(), user.getEmail(), nombreDeUsuario);
                     } else {
-                        Toast.makeText(this,
-                                "Error al actualizar el perfil de usuario.",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Error al actualizar el perfil de usuario.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -132,15 +134,35 @@ public class RegisterActivity extends AppCompatActivity {
                 .document(uid)
                 .set(userData)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this,
-                            "Usuario creado.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Usuario creado.", Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this,
-                            "Error al guardar el usuario en Firestore.",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error al guardar el usuario en Firestore.", Toast.LENGTH_SHORT).show();
                 });
+    }
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "My Channel";
+            String description = "Channel description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void showVerificationNotification() {
+        if (NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.logo)
+                    .setContentTitle("Bienvenido!")
+                    .setContentText("Bienvenido a NeoGestion " + auth.getCurrentUser()+"! Por favor, verifica tu correo para iniciar sesión.")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(NOTIFICATION_ID, builder.build());
+        }
     }
 }
 

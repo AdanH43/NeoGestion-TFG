@@ -42,7 +42,6 @@ public class GeminiModel {
             public void onSuccess(GenerateContentResponse result) {
                 String respuestaGenerada = result.getText();
                 chatHistory.add(new Message(respuestaGenerada, false));
-
                 callback.onSuccess(respuestaGenerada);
             }
 

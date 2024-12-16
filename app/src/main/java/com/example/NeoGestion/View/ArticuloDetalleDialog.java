@@ -61,7 +61,7 @@ public class ArticuloDetalleDialog extends DialogFragment {
             Window window = dialog.getWindow();
             if (window != null) {
                 window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                window.setLayout(1000, 1100);
+                window.setLayout(1100, 1100);
             }
         }
     }

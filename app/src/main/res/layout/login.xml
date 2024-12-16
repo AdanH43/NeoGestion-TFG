@@ -23,7 +23,7 @@
         android:id="@+id/edt_usuemail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/email"
+        android:hint="Email"
         android:layout_margin="50dp"
         app:hintTextColor="@color/blue_600"
         app:boxStrokeColor="@color/blue_400"

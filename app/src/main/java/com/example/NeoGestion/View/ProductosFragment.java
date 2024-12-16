@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -39,7 +41,9 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
     private RecyclerView recyclerView;
     private FloatingActionButton floatAdd;
     private RecyclerArticulo productAdapter;
+    private TextView tvVacio;
     private ImageButton btEscaner;
+    private ImageView imgVacio;
     private SearchView edtBuscar;
     private List<Producto> productList;
     private FirebaseFirestore db;
@@ -54,19 +58,13 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         mAuth = FirebaseAuth.getInstance();
         edtBuscar = view.findViewById(R.id.buscar);
         btEscaner = view.findViewById(R.id.bt_escaner);
+        tvVacio = view.findViewById(R.id.tv_vacio);
+        imgVacio = view.findViewById(R.id.img_vacio);
         firebaseHelper = new FireBase();
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Cargando tus productos...");
-        progressDialog.setCancelable(false);
-        progressDialog.setIndeterminate(true);
-
-        loadProducts();
         recyclerView = view.findViewById(R.id.recycler_view_products);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         productList = new ArrayList<>();
-
-
-
+        loadProducts();
         FloatingActionButton fabAddProduct = view.findViewById(R.id.floatAdd);
         fabAddProduct.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), CreateProductoActivity.class);
@@ -95,6 +93,10 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
         return view;
     }
     private void loadProducts() {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Cargando tus productos...");
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
         progressDialog.show();
         String emailUsuario = mAuth.getCurrentUser().getEmail();
         if (emailUsuario != null) {
@@ -107,18 +109,29 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
                             Producto product = document.toObject(Producto.class);
                             productList.add(product);
                         }
-                        productAdapter = new RecyclerArticulo(productList, this);
-                        recyclerView.setAdapter(productAdapter);
+                        if (!productList.isEmpty()){
+                            imgVacio.setVisibility(View.GONE);
+                            tvVacio.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            productAdapter = new RecyclerArticulo(productList, this);
+                            recyclerView.setAdapter(productAdapter);
+                        }
+
                         progressDialog.dismiss();
                     })
                     .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Error al cargar los productos", Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                        imgVacio.setVisibility(View.VISIBLE);
+                        tvVacio.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                     });
         }
     }
     private void barScan() {
         IntentIntegrator integrator = IntentIntegrator.forSupportFragment(this);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("Escanea un código de barras");
         integrator.setCaptureActivity(CustomCaptura.class);
         integrator.setCameraId(0);
         integrator.setBeepEnabled(true);
