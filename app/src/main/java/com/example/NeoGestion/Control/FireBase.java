@@ -12,9 +12,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -47,6 +51,22 @@ public class FireBase  {
         userMap.put("tipo", tipo);
         userMap.put("foto", fotoString);
         userMap.put("fecha_baja", "");
+
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            Date fechaDate = dateFormat.parse(fecha);
+            Date fechaActual = new Date();
+
+
+            if (fechaDate.after(fechaActual)) {
+                errorCallback.onCallback("La fecha no puede ser superior a la fecha actual.");
+                return;
+            }
+
+        } catch (ParseException e) {
+            errorCallback.onCallback("Formato de fecha inválido.");
+            return;
+        }
 
         db.collection("Users").document(emailId).collection("usuarios")
                 .add(userMap)

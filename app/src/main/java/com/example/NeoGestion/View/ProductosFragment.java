@@ -156,7 +156,6 @@ public class ProductosFragment extends Fragment implements OnItemClickProducto {
             }
         } else if (requestCode == 1) {
             loadProducts();
-            productAdapter.notifyDataSetChanged();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
